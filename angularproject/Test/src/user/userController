@@ -1,0 +1,67 @@
+var userService = require('./userService');
+
+var createUserControllerFn = async (req, res) => {
+
+
+    try{
+        //console.log("studentController - line10(req.body): ", req.body + "\n");
+        //console.log("studentController - line11(req.body):", JSON.stringify(req.body) +  "\n" );
+
+        var status = await userService.createUserDBService(req.body);
+        console.log("\nstudentController: status " + status + "\n");
+
+        if (status) {
+            res.send({ "Status": true, "message": "User created successfully" });
+        } else {
+            res.send({ "Status": false, "message": "Error creating user" });
+        }
+    }
+    catch(err) {
+        console.log("Error line 19 in userController" + err);
+    }
+}
+
+
+var loginUserControllerFn = async (req, res) => {
+
+    var result = null;
+    try {
+        result = await userService.loginUserDBService(req.body);
+        if (result.status) {
+            console.log("role2:" + result.role)
+            res.send({ status: true, message: result.msg, role: result.role });
+        } else {
+            res.send({ "status": false, "message": result.msg });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.send({ "status": false, "message": error.msg });
+    }
+}
+
+var deleteUserControllerFn = async (req, res) => {
+    try {
+      const { username, email } = req.body;
+  
+      const deletionStatus = await userService.deleteUserDBService(username, email);
+      console.log("deletionStatus:" + deletionStatus)
+  
+      if (deletionStatus) {
+        res.send({ status: true, message: 'User deleted successfully' });
+      } else {
+        res.send({ status: false, message: 'Error deleting user' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.send({ status: false, message: 'Error deleting user' });
+    }
+  };
+
+module.exports = { createUserControllerFn: createUserControllerFn,loginUserControllerFn, deleteUserControllerFn };
+/*
+module.exports = {
+    createUserControllerFn: createUserControllerFn,
+    loginUserControllerFn: loginUserControllerFn,
+    deleteUserControllerFn: deleteUserControllerFn
+  };*/

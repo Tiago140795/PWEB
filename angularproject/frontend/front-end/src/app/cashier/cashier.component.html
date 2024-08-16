@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="cashier.component.scss">
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">Terra & Mar Bistro</h1>
+    <button class="delete-user" (click)="openDeleteUserBox()">Delete User</button>
+    <button class="logout" (click)="logout()">Log Out</button>
+  </div>
+  
+  <div class="content" *ngIf="ordersBoxVisible">
+    <h1 class="title">Cashier</h1>
+    <div class="box-container">
+      <div class="box">
+        <h2>New Orders</h2>
+      </div>
+      <div class="box">
+        <h2>Orders that are Ready</h2>
+      </div>
+    </div>
+  </div>
+  
+  <div class="delete-user-box" *ngIf="deleteUserBoxVisible">
+    <div class="overlay"></div>
+    <div class="card">
+      <h3>Delete User</h3>
+      <form>
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" [(ngModel)]="deleteUserUsername" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" [(ngModel)]="deleteUserEmail" />
+        </div>
+        <div class="buttons">
+          <button class="cancel" (click)="closeDeleteUserBox()">Cancel</button>
+          <button class="confirm" (click)="deleteConfirmed()">Confirm Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+
+</body>
+</html>
