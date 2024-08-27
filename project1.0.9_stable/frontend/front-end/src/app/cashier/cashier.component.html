@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="cashier.component.scss">
+</head>
+
+<body>
+  <!-- ----------------- HEADER ----------------- -->
+  <div class="header">
+    <div class="title-container">
+      <h1 class="title">Terra & Mar Bistro</h1>
+      <button class="delete-user" (click)="openDeleteUserBox()">Delete User</button>
+      <button class="logout" (click)="logout()">Log Out</button>
+    </div>
+    <h3 class="role">Cashier</h3>
+  </div>
+  
+  <!-- ----------------- DELETE USER ----------------- -->
+
+  <div class="delete-user-box" *ngIf="deleteUserBoxVisible">
+    <div class="overlay"></div>
+    <div class="card">
+      <h3>Delete User</h3>
+      <form>
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" [(ngModel)]="deleteUserUsername" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" [(ngModel)]="deleteUserEmail" />
+        </div>
+        <div class="buttons">
+          <button class="cancel" (click)="closeDeleteUserBox()">Cancel</button>
+          <button class="confirm" (click)="deleteConfirmed()">Confirm Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- ----------------- MENU ----------------- -->
+   <div class="content">
+    <div class="cashierOpinions" *ngIf="menuVisible">
+
+      <div class="firstRowMenu">
+        <div class="card">
+          <h3> Tables</h3>
+          <form>
+            <div class="buttons">
+              <button class="ordersPrep" (click)="ordersPrep()">Orders</button>
+              <button class="occupation" (click)="occupation()">Occupation</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3> Order </h3>
+          <form>
+            <div class="buttons">
+              <button class="waiterTables" (click)="waiterTables()">Delete Order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="secondRowMenu">
+        <div class="card">
+          <h3> Kitchen Preparation</h3>
+          <form>
+            <div class="buttons">
+              <button class="queues" (click)="kitchenPrep()">Queues</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3> Receipt</h3>
+          <form>
+            <div class="buttons">
+              <button class="receiptTable" (click)="receiptTable()">Receipt Table</button>
+              <button class="receiptDay" (click)="receiptDay()">Receipt Day</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ----------------- TABLES ----------------- -->
+  <!--  Tables that have orders in preparation -->
+  <div class="tablesFoodInPreparation" *ngIf="tablesFoodInPreparationVisible">
+    <div class="foodPreparation">
+      <h4>Tables that have food in preparation</h4>
+    </div>
+    <button class="goBack" (click)="returnFromTable1()">Cancel</button>
+  </div>
+    
+  <!--  Tables that are free/occupaied -->
+  <div class="tableOccupation" *ngIf="tableOccupationVisible">
+    <div class="occuapation">
+      <h4>Tables Occupation</h4>
+    </div>
+    <div *ngFor="let table of tablesString" class="table-item">
+      <span class="table-name">
+        The table {{ table.tableNumber }} is
+        <ng-container *ngIf="table.isReserved; else freeTable">Occupied</ng-container>
+        <ng-template #freeTable>Free</ng-template>.
+      </span>
+    </div>
+     <button class="goBack" (click)="returnFromTable2()">Cancel</button>
+  </div>
+    
+  <!-- ----------------- ORDERS ----------------- -->
+  
+  <div class="waiterPerTable" *ngIf="waiterPerTableVisible">
+    <div class="waiterTable">
+      <h4>Orders</h4>
+       <!-- Delete Tables-->
+      <div class="listOrders">
+        <!-- Show the tables -->
+        <div *ngFor="let item of readyQueue" class="table-item">
+          <span class="item-name">Order Number: {{ item.orderId }} | Table Number: {{ item.tableNumber }}  | Waiter Name: {{ item.waiterName }}
+          Dishes Ready: {{ item.dishComplete }} Drinks Ready: {{ item.drinkComplete }}
+          </span>
+        </div>
+      </div>
+    </div>    
+          <div class="deleteTableForm">
+            <h3>Table to Delete</h3>
+            <form (ngSubmit)="deleteOrder()">
+              <div class="form-group">
+                <label for="TableNumber">Order Number</label>
+                <input type="number2"[(ngModel)]="orderIdDelete" [ngModelOptions]="{ standalone: true }"
+                class="form-control" id="newTableNumber" placeholder="Enter Order Number"/>
+              </div>
+              <div class="buttons">
+                <button class="goBack" (click)="returnFromWaiter()">Cancel</button>
+                <button class="deleteTable" type="submit">Delete Table</button>
+              </div>
+            </form>
+          </div>
+  </div>
+  
+
+  <!-- ----------------- KITCHEN PREPARATION ----------------- -->
+
+  <div class="kitchenPreparation" *ngIf="kitchenQueuesVisible">
+    <div class="queuesKitchen">
+      <h4>Kitchen Queues</h4>
+        <!-- Loop through kitchen queues  -->
+        <div class="orders" *ngIf="orderFoodVisible">
+          <h3>Received Orders</h3>
+            <div class="listOrders">
+              <div *ngFor="let item of newOrdersQueue" class="selected-food-item">
+                <span class="item-name">
+                  Order Number: {{ item.orderId }} |
+                  Table Number: {{ item.tableNumber }} |
+                  Waiter Name: {{ item.waiterName }} |
+                  In Preparation: {{ item.inPreparation }} |
+                  Dishes Ready: {{ item.dishComplete }} |
+                  Drinks Ready: {{ item.drinkComplete }}
+                </span>
+              </div>
+        </div>
+      </div>
+    </div>
+      <button class="goBack" (click)="returnFromKitchen()">Cancel</button>
+  </div>
+
+  <!-- ----------------- RECEIPT ----------------- -->
+        
+  <!--  Receipt for the tabel-->
+  <div class="tableReceipt" *ngIf="tableReceiptVisible">
+    <div class="overlay"></div>
+    <div class="card">
+      <h3>Table Receipt</h3>
+      <form>
+        <div class="form-group">
+          <label for="table">Table Number</label>
+          <input type="text" [(ngModel)]="tableNumber" name="tableNumber" [ngModelOptions]="{standalone: true}" class="form-control" id="stTableNumber" placeholder="Table Number"/>
+        </div>
+        <div class="buttons">
+          <button class="searchTable" (click)="searchTable()">Search Table</button>
+        </div>  
+
+        <div class="buttons">
+          <button class="goBack" (click)="returnFromReceipt1()">Cancel</button>
+          <button class="sendOrder" (click)="doneReceiptTable()">Complete Receipt</button>
+        </div>  
+      </form>
+    </div>
+  </div>  
+
+ 
+  <div class="orderDetails" *ngIf="showBillsTable">
+    <h3>Receipt:</h3>
+      <div class="fullOrder">
+        <div class="order" *ngFor="let item of orderItems">{{ item.name }} - €{{ item.price }}</div>
+      </div>
+      <div class="totalBill">
+        <h4>Total Bill: {{ totalBill }}€</h4>
+      </div>
+      <button class="goBack" (click)="returnFromReceiptTable()">Cancel</button>
+  </div>
+  
+<!--  Receipt of the day -->
+
+<div class="dayReceipt" *ngIf="showBillsDay">
+  <div class="totalBill">
+    <h4>Total Bill: {{ totalBill }}€</h4>
+  </div>
+   <button class="goBack" (click)="returnFromReceiptDay()">Cancel</button>
+</div>
+  
+
+</body>
+</html>

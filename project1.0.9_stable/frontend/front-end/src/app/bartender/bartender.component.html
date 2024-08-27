@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bartender.component.scss">
+</head>
+  <body>
+
+    <!-- Topo -->
+    <div class="header">
+      <div class="title-container">
+        <h1 class="title">Terra & Mar Bistro</h1>
+        <button class="logout" (click)="logout()" >Log Out</button>
+        <!--<button class="TESTE" (click)="getOrderInfo('1')" >TESTE</button>-->
+      </div>
+      <h3 class="role">Bartender</h3>
+    </div>
+    
+    <div class="content">
+      <div class="drinks" *ngIf="orderDrinksVisible">
+        <div class="card">
+
+          <div class="received">
+            <h3>Received Order</h3>
+            <div class="listOrders">
+              <div *ngFor="let item of drinksQueue" class="selected-food-item">
+               <span class="item-name">Order Number: {{ item.orderId }} | Table Number: {{ item.tableNumber }}  | Waiter Name: {{ item.waiterName }}</span>
+                <div *ngIf="item.drinks">
+                  <div *ngFor="let drink of item.drinks">
+                    <span class="drink-name">{{ drink.name }}</span>
+                    <!-- Add other properties of the drink here -->
+                  </div>
+                 </div>
+              </div>
+              <button class="btn btn-sm btn-success" (click)="startPreparation()">Start Preparation</button>
+            </div>
+          </div>
+        
+          <div class="preparation">
+            <h3>In Preparation</h3>
+            <div class="listOrders">
+              <div *ngFor="let item of preparationQueue" class="selected-preparation-item">
+                <span class="item-name">Order Number: {{ item.orderId }} | Table Number: {{ item.tableNumber }} | Waiter Name: {{ item.waiterName }}</span>
+                <div *ngIf="item.drinks">
+                  <div *ngFor="let drink of item.drink">
+                    <span class="drink-name">{{ drink.name }}</span>
+                    <!-- Add other properties of the drink here -->
+                  </div>
+                </div>
+                </div>
+              <button class="btn btn-sm btn-success" (click)="ready()">Ready Preparation</button>
+            </div>
+          </div>
+      
+          <div class="done">
+            <h3>Orders Ready</h3>
+            <div class="listOrders">
+              <div *ngFor="let item of readyQueue" class="selected-ready-item">
+                <span class="item-name">Order Number: {{ item.orderId }} | Table Number: {{ item.tableNumber }} | Waiter Name: {{ item.waiterName }}</span>
+                <div *ngIf="item.drinks">
+                  <div *ngFor="let drink of item.drinks">
+                    <span class="drink-name">{{ drink.name }}</span>
+                    <!-- Add other properties of the drink here -->
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-success" (click)="removeOrder()">Remove</button>
+            </div>
+          </div>
+
+        </div> 
+      </div> 
+    </div> 
+    
+  </body>
+</html>

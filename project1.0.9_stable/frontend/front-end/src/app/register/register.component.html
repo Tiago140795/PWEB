@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="register.component.scss">
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="card">
+      <h1>User Registration</h1>
+      
+      <form (ngSubmit)="register()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" class="form-control" id="username" placeholder="Enter Username">
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select [(ngModel)]="role" [ngModelOptions]="{standalone: true}" class="form-control" id="role">
+            <option value="" disabled selected>Choose your Role</option>
+            <option value="cashier">Cashier</option>
+            <option value="bartender">Bartender</option>
+            <option value="cook">Cook</option>
+            <option value="waiter">Waiter</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" class="form-control" id="email" placeholder="Enter Email">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" class="form-control" id="password" placeholder="Enter Password">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-link" (click)="goToLogin()">Go to Login</button>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+       
+      </form>
+    </div>
+  </div>
+</body>
+</html>

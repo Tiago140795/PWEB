@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="waiter.component.scss" />
+  </head>
+  <body>
+    <!-- ----------------- HEADER ----------------- -->
+    <div class="header">
+      <div class="title-container">
+        <h1 class="title">Terra & Mar Bistro</h1>
+        <button class="logout" (click)="logout()">Log Out</button>
+      </div>
+      <h3 class="role">Waiter</h3>
+    </div>
+
+    <!-- ----------------- MENU INICIAL ----------------- -->
+    <div class="content">
+      <div class="waiterOpinions" *ngIf="boxesVisible">
+        <div class="card">
+          <h3>See and Change Table Status</h3>
+          <form>
+            <div class="buttons">
+              <button class="tables" (click)="enterTables()">See Tables</button>
+              <button class="delTables" (click)="enterDelTables()">Delete Tables</button>
+              <button class="freeTables" (click)="freeTables()">Free Tables</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Register New Orders</h3>
+          <form>
+            <div class="buttons">
+              <button class="orders" (click)="enterOrders()">New Order</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Finished Orders</h3>
+          <form>
+            <div class="buttons">
+              <button class="orders" (click)="SeeOrders()">Orders</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------- TABLES ----------------- -->
+
+    <div class="goBack1" *ngIf="tablesVisible">
+      <div class="overlay"></div>
+      <div class="card">
+        <h3>Tables</h3>
+        <!-- Show the tables -->
+        <div *ngFor="let table of tablesString" class="table-item">
+          <span class="table-name"
+            >Table {{ table.tableNumber }} | Capacity: {{ table.capacity }} |
+            Reserved: {{ table.isReserved }}</span
+          >
+        </div>
+        <!-- Create Tables-->
+        <div class="CreateTableForm">
+          <form (ngSubmit)="createTable()">
+            <div class="form-group">
+              <label for="newTableNumber">New Table Number</label>
+              <input
+                type="number" [(ngModel)]="tableNumberCreate" [ngModelOptions]="{ standalone: true }"
+                class="form-control" id="newTableNumber" placeholder="Enter Table Number"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="newCapacity">New Capacity</label>
+              <input
+                type="number1" [(ngModel)]="tableSeats" [ngModelOptions]="{ standalone: true }"
+                class="form-control" id="newCapacity" placeholder="Enter Capacity"
+              />
+            </div>
+
+            <div class="buttons">
+              <button class="goBack" (click)="goBack()">Cancel</button>
+              <button class="createTable" type="submit">Create Table</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Tables-->
+    <div class="goBack1" *ngIf="delTablesVisible">
+      <div class="overlay"></div>
+      <div class="card">
+        <h3>Tables</h3>
+        <!-- Show the tables -->
+        <div *ngFor="let table of tablesString" class="table-item">
+          <span class="table-name"
+            >Table {{ table.tableNumber }} | Capacity: {{ table.capacity }} |
+            Reserved: {{ table.isReserved }}</span>
+        </div>
+        <h3>Table to Delete</h3>
+        <div class="deleteTableForm">
+          <form (ngSubmit)="deleteTable()">
+            <div class="form-group">
+              <label for="TableNumber">Table Number</label>
+              <input type="number2"[(ngModel)]="tableNumberDelete" [ngModelOptions]="{ standalone: true }"
+              class="form-control" id="newTableNumber" placeholder="Enter Table Number"/>
+            </div>
+            <div class="buttons">
+              <button class="goBack" (click)="goBack()">Cancel</button>
+              <button class="deleteTable" type="submit">Delete Table</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+   <!-- Change Tables--> 
+    <div class="goBack1" *ngIf="freeTablesVisible">
+      <div class="overlay"></div>
+      <div class="card">
+        <h3>Tables</h3>
+        <!-- Show the tables -->
+        <div *ngFor="let table of tablesString" class="table-item">
+          <span class="table-name"
+            >Table {{ table.tableNumber }} | Capacity: {{ table.capacity }} |
+            Reserved: {{ table.isReserved }}</span>
+        </div>
+        <div class="deleteTableForm">
+          <form (ngSubmit)="freeTables()">
+            <div class="form-group">
+              <label for="TableNumber">Table Number</label>
+              <input type="number2"[(ngModel)]="tableNumberFree" [ngModelOptions]="{ standalone: true }"
+              class="form-control" id="newTableNumber" placeholder="Enter Table Number"/>
+            </div>
+            <div class="buttons">
+              <button class="goBack" (click)="goBack()">Cancel</button>
+              <button class="deleteTable" type="submit">Free Table</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ----------------- NEW ORDERS ----------------- -->
+    <div class="newOrder" *ngIf="menuVisible">
+      <div class="overlay"></div>
+      <div class="card">
+        <h3>New Order</h3>
+         <!-- Show the tables -->
+         <div *ngFor="let table of tablesString" class="table-item">
+          <span class="table-name"
+            >Table {{ table.tableNumber }} | Capacity: {{ table.capacity }} |
+            Reserved: {{ table.isReserved }}</span>
+        </div>
+        <form>
+          <div class="form-group">
+            <label for="table">Table Number</label>
+            <input
+              type="text"
+              [(ngModel)]="tableNumberOrders"
+              name="tableNumber"
+              [ngModelOptions]="{ standalone: true }"
+              class="form-control"
+              id="stTableNumber"
+              placeholder="Table Number"
+            />
+          </div>
+          <div class="makeOrder">
+            <div class="food">
+              <label for="chooseFood">Choose Food</label>
+              <button class="orderFoodBtn" (click)="orderFoodBtn()">
+                Food
+              </button>
+            </div>
+            <div class="drinks">
+              <label for="chooseDrink">Choose Drinks</label>
+              <button class="orderDrinksBtn" (click)="orderDrinksBtn()">
+                Drinks
+              </button>
+            </div>
+          </div>
+
+          <div class="buttons">
+            <button class="goBack" (click)="saveMenu2()">Cancel</button>
+            <button class="sendOrder" (click)="sendOrder2()">
+              Complete Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ----------------- ORDER FOOD ----------------- -->
+    <div class="orderFood" *ngIf="orderFoodVisible">
+      <div class="card">
+        <h3>Choose Food</h3>
+        <div class="food-items">
+          <!-- Loop through your predefined dishes -->
+          <div class="food-item" *ngFor="let dish of predefinedDishes">
+            <img
+              [src]="'assets/images/food/' + dish.name + '.png'"
+              alt="{{ dish.name }} Image"
+            />
+            <span>{{ dish.displayName }}</span>
+            <button (click)="selectFoodItem(dish.name)">Add to Order</button>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="return" (click)="return()">Cancel</button>
+          <button class="saveFood" (click)="saveFood()">Save Food</button>
+        </div>
+      </div>
+
+      <div class="selected-items">
+        <h3>Selected Items</h3>
+        <div class="selected-food">
+          <div
+            *ngFor="let item of selectedFoodItems"
+            class="selected-food-item"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------- ORDER DRINKS ----------------- -->
+    <div class="orderDrinks" *ngIf="orderDrinksVisible">
+      <div class="card">
+        <h3>Choose Drinks</h3>
+        <div class="drinks-items">
+          <!-- Loop through your predefined drinks -->
+          <div class="drink-item" *ngFor="let drink of predefinedDrinks">
+            <img
+              [src]="'assets/images/drinks/' + drink.name + '.png'"
+              alt="{{ drink.name }} Image"
+            />
+            <span>{{ drink.displayName }}</span>
+            <button (click)="selectDrinkItem(drink.name)">Add to Order</button>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="return" (click)="return()">Cancel</button>
+          <button class="saveDrinks" (click)="saveDrinks()">Save Drinks</button>
+        </div>
+      </div>
+
+      <div class="selected-items">
+        <h3>Selected Items</h3>
+        <div class="selected-drink">
+          <div
+            *ngFor="let item of selectedDrinkItems"
+            class="selected-drink-item"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <!-- ----------------- NEW ORDERS ----------------- -->
+     <div class="newOrder" *ngIf="seeOrdersVisible">
+      <div class="overlay"></div>
+      <div class="card">
+       
+        <h3>Finished Order</h3>
+          <!-- Show the orders -->
+          <div class="card">
+          <div *ngIf="finishedDishes">
+            
+        <div *ngFor="let dish of finishedDishes" class="dish-item">
+          <h4>Dishes</h4>
+          <div class="card">
+          <span class="table-name">
+            Order Number: {{ dish.orderId }} Table {{ dish.tableNumber }} Dishes:
+            <div *ngFor="let dishes of dish.dishes">
+              <span class="dish-name">{{ dishes.name }}</span>
+              <!-- Add other properties of the dish here -->
+            </div>
+          </span>
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+          <div *ngIf="finishedDrinks">
+        <div *ngFor="let drink of finishedDrinks" class="fish-item">
+          <h4>Drinks</h4>
+          <div class="card">
+          <span class="table-name">
+            Order Number: {{ drink.orderId }} Table {{ drink.tableNumber }} 
+          | Drinks: 
+          <div *ngFor="let drinks of drink.drinks">
+            <span class="dish-name">{{ drinks.name }}</span>
+            <!-- Add other properties of the dish here -->
+          </div>
+        </span>
+      </div>
+      </div>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="return" (click)="goBack()">Return</button>
+        </div>
+      </div>
+    </div>
+
+    
+  </body>
+</html>

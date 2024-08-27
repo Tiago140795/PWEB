@@ -1,0 +1,62 @@
+var userModel = require('./userModel');
+var key = '123456789trytryrtyr';
+var encryptor = require('simple-encryptor')(key);
+
+module.exports.createUserDBService = (userDetails) => {
+
+   return new Promise(function myFn(resolve, reject) {
+
+       var userModelData = new userModel();
+
+       userModelData.username = userDetails.username;
+       userModelData.role = userDetails.role;
+       userModelData.email = userDetails.email;
+       userModelData.password = userDetails.password;
+
+       var encrypted = encryptor.encrypt(userDetails.password);
+       userModelData.password = encrypted;
+
+       userModelData.save()
+       .then(result => {
+           resolve(result);
+       })
+       .catch(error => {
+           reject(error);
+       });
+
+   });
+
+}
+
+module.exports.loginUserDBService = (userDetails) => {
+    return new Promise(function myFn(resolve, reject) {
+      userModel.findOne({ username: userDetails.username })
+        .exec()
+        .then(result => {
+          if (result !== null) {
+            var decrypted = encryptor.decrypt(result.password);
+            if (decrypted === userDetails.password) {
+            console.log("role:" + result.role)
+              resolve({ status: true, msg: "User Validated Successfully", role: result.role });
+            } else {
+              reject({ status: false, msg: "User password" });
+            }
+          } else {
+            reject({ status: false, msg: "User not found" });
+          }
+        })
+        .catch(error => {
+          reject({ status: false, msg: "Invalid Data" });
+        });
+    });
+  };
+  
+  module.exports.deleteUserDBService = async (username, email) => {
+    try {
+      await userModel.deleteOne({ username, email });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
